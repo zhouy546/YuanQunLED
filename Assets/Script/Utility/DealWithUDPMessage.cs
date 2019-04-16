@@ -43,13 +43,17 @@ public class DealWithUDPMessage : MonoBehaviour {
 
             Debug.Log(dataTest);
 
-            SendUPDData.instance.udp_Send(dataTest, "192.168.1.52",29010);
+         
 
             if (dataTest == "2002")//
             {
                 EventCenter.Broadcast(EventDefine.PlayAnimation);
+                SendUPDData.instance.udp_Send(dataTest, "192.168.1.52", 29010);
+
             }
             if (dataTest == "2003") {//重置
+                ResetNode();
+                SendUPDData.instance.udp_Send(dataTest, "192.168.1.52", 29010);
                 //EventCenter.Broadcast(EventDefine.StopAnimation);
             }
 
@@ -61,6 +65,13 @@ public class DealWithUDPMessage : MonoBehaviour {
 
     }
 
+    public void ResetNode() {
+        foreach (var item in ValueSheet.bannerCtrs)
+        {
+            item.toDefaultPos();
+        }
+        this.GetComponent<Animator>().SetBool("Idle", true);
+    }
 
 
     private void Awake()
@@ -78,9 +89,13 @@ public class DealWithUDPMessage : MonoBehaviour {
 
     public void Start()
     {
-
+        EventCenter.AddListener(EventDefine.PlayAnimation, TriggerAnim);
     }
 
+    public void TriggerAnim() {
+        this.GetComponent<Animator>().SetBool("Idle",false);
+        this.GetComponent<Animator>().SetTrigger("Play");
+    }
 
     private void Update()
     {

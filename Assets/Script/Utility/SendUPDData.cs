@@ -38,6 +38,24 @@ public class SendUPDData : MonoBehaviour {
         }
     }
 
+    public bool sendLocal(string da) {
+        try
+        {
+            //设置服务IP，设置端口号
+            string _ip = "127.0.0.1";
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(_ip), 29010);
+            //发送数据
+            byte[] data = new byte[1024];
+            data = Encoding.ASCII.GetBytes(da);
+            udpserver.SendTo(data, data.Length, SocketFlags.None, ipep);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
